@@ -1,0 +1,32 @@
+branches:
+  except:
+    - /^v[0-9]/
+
+language: node_js
+
+sudo: false
+
+node_js:
+  - "stable"
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - npm i -g npm@^2.0.0
+
+install:
+  - npm install
+
+script:
+  - make
+
+after_success:
+  - cd build
+  - git init
+  - git config user.name "Travis CI"
+  - git config user.email "jarvis@resourceful-humans.com"
+  - git add .
+  - git commit -m "Deploy to GitHub Pages"
+  - git push --force --quiet "https://${GH_TOKEN}@github.com/ResourcefulHumans/graph-demo.git" master:gh-pages > /dev/null 2>&1
