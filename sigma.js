@@ -1,12 +1,13 @@
 'use strict'
 
 let _map = require('lodash/map')
+let _sample = require('lodash/sample')
 let avatarSize = 32
+let springLength = 50
 let networhkGenerator = require('./src/networhk-generator')
 
-let numPeople = parseInt(window.location.hash.substr(1)) || 250
-let numContributions = Math.ceil(numPeople / 4)
-let data = networhkGenerator(numPeople, numContributions)
+let numPeople = 25
+let data = networhkGenerator(numPeople)
 
 let Viva = require('vivagraphjs')
 let graph = Viva.Graph.graph();
@@ -15,12 +16,7 @@ _map(data.peopleIds, (personId) => {
   graph.addNode('person-' + personId, {type: 'person'})
 })
 _map(data.contributionIds, (contributionId) => {
-  let contribution = data.contributions[contributionId]
-  graph.addNode('contribution-' + contributionId, {
-    type: 'contribution',
-    open: contribution.open,
-    priority: contribution.priority
-  })
+  graph.addNode('contribution-' + contributionId, {type: 'contribution'})
 })
 _map(data.commitments, (commitment) => {
   graph.addLink('person-' + commitment.person, 'contribution-' + commitment.contribution, {status: commitment.status})
@@ -29,38 +25,19 @@ _map(data.commitments, (commitment) => {
 let defs = Viva.Graph.svg('defs');
 graphics.getSvgRoot().append(defs);
 
-let status2color = {
-  'gold': '#F2B646',
-  'silver': '#BABABA',
-  'bronze': '#E07D53',
-  'good': '#99FF33',
-  'bad': '#dc0000'
-}
-
 graphics.node((node) => {
     if (node.data.type === 'contribution') {
-      let contribution = Viva.Graph.svg('circle')
+      return Viva.Graph.svg('circle')
         .attr('r', avatarSize / 4)
+        .attr('fill', _sample(['#F2B646', '#BABABA', '#E07D53']))
         .attr('data-type', node.data.type)
-      if (node.data.open) {
-        contribution.attr('stroke', status2color[node.data.priority]).attr('stroke-width', '4px')
-        contribution.attr('fill', 'transparent')
-      } else {
-        contribution.attr('fill', status2color[node.data.priority])
-      }
-      return contribution
     } else {
+
       var pattern = Viva.Graph.svg('pattern')
         .attr('id', 'imageFor_' + node.id)
         .attr('patternUnits', 'userSpaceOnUse')
         .attr('width', avatarSize)
         .attr('height', avatarSize)
-
-      var imageBg = Viva.Graph.svg('circle')
-        .attr('cx', avatarSize / 2)
-        .attr('cy', avatarSize / 2)
-        .attr('fill', '#fff')
-        .attr('r', avatarSize / 2);
 
       var image = Viva.Graph.svg('image')
         .attr('x', '0')
@@ -68,7 +45,6 @@ graphics.node((node) => {
         .attr('height', avatarSize)
         .attr('width', avatarSize)
         .link(chance.avatar({protocol: 'https'}) + '?s=' + avatarSize + '&d=monsterid');
-      pattern.append(imageBg);
       pattern.append(image);
       defs.append(pattern);
 
@@ -79,8 +55,6 @@ graphics.node((node) => {
         .attr('cx', avatarSize / 2)
         .attr('cy', avatarSize / 2)
         .attr('fill', 'url(#imageFor_' + node.id + ')')
-        .attr('stroke', '#000')
-        .attr('stroke-width', '1px')
         .attr('r', avatarSize / 2);
 
       ui.append(circle);
@@ -97,15 +71,15 @@ graphics.node((node) => {
 
 graphics.link((link) => {
   return Viva.Graph.svg('line')
-    .attr('stroke', status2color[link.data.status])
+    .attr('stroke', link.data.status === 'good' ? '#99FF33' : '#dc0000')
     .attr('stroke-width', 1);
 })
 
 let layout = Viva.Graph.Layout.forceDirected(graph, {
-  springLength: 50,
+  springLength,
   springCoeff: 0.0001,
   dragCoeff: 0.02,
-  gravity: -2.5
+  gravity: -2
 });
 
 var renderer = Viva.Graph.View.renderer(graph, {graphics, layout});
