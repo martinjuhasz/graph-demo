@@ -32,7 +32,6 @@
     "browserify": "^13.0.0",
     "chance": "^1.0.1",
     "lodash": "^4.6.1",
-    "ngraph.forceatlas2": "^1.1.0",
     "vivagraphjs": "^0.8.1"
   },
   "config": {
