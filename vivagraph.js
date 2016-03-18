@@ -1,10 +1,10 @@
 'use strict'
 
-let _map = require('lodash/map')
-let _chunk = require('lodash/chunk')
 let avatarSize = 32
 let networhkGenerator = require('./src/networhk-generator')
 let status2color = require('./src/status2color')
+let Chance = require('chance')
+let chance = new Chance()
 
 let numPeople = parseInt(window.location.hash.substr(1)) || 250
 let numContributions = Math.ceil(numPeople / 4)
@@ -128,43 +128,29 @@ let layout = Viva.Graph.Layout.forceDirected(graph, {
   gravity: -2.5
 })
 
-var renderer = Viva.Graph.View.renderer(graph, {graphics, layout})
+let renderer = Viva.Graph.View.renderer(graph, {graphics, layout})
 renderer.run(50)
 
-// Add persons in batch of 10
-let pages = _chunk(data.peopleIds, 10)
-var addInterval = setInterval(() => {
-  let page = pages.shift()
-  if (!page) {
-    clearInterval(addInterval)
-    return
-  }
-  graph.beginUpdate()
-  _map(page, (personId) => {
-    let person = addPerson(personId)
-    _map(person.commitments, (commitment) => {
-      addContribution(commitment.contribution)
-      graph.addLink('person-' + commitment.person, 'contribution-' + commitment.contribution, {status: commitment.status})
+let GraphPopulator = require('./src/graph-populator')
+let populator = new GraphPopulator(data, {
+  beginUpdate: () => {
+    graph.beginUpdate()
+  },
+  endUpdate: () => {
+    graph.endUpdate()
+  },
+  addPerson: (person) => {
+    graph.addNode('person-' + person.id, {type: 'person'})
+  },
+  addCommitment: (commitment) => {
+    graph.addLink('person-' + commitment.person, 'contribution-' + commitment.contribution, {status: commitment.status})
+  },
+  addContribution: (contribution) => {
+    graph.addNode('contribution-' + contribution.id, {
+      type: 'contribution',
+      open: contribution.open,
+      priority: contribution.priority
     })
-  })
-  graph.endUpdate()
-}, 100)
-
-let renderedContribitions = {}
-function addContribution(contributionId) {
-  if (renderedContribitions[contributionId]) {
-    return
   }
-  let contribution = data.contributions[contributionId]
-  graph.addNode('contribution-' + contributionId, {
-    type: 'contribution',
-    open: contribution.open,
-    priority: contribution.priority
-  })
-}
+}).populate()
 
-function addPerson(personId) {
-  let person = data.people[personId]
-  graph.addNode('person-' + personId, {type: 'person'})
-  return person
-}

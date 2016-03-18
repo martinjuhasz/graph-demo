@@ -4,7 +4,6 @@ let Chance = require('chance')
 let _sample = require('lodash/sample')
 let _random = require('lodash/random')
 let _map = require('lodash/map')
-let _filter = require('lodash/filter')
 let _find = require('lodash/find')
 
 function createCommitment(commitmentId, personId) {
