@@ -4,6 +4,7 @@ let avatarSize = 32
 let springLength = 50
 let networhkGenerator = require('./src/networhk-generator')
 let status2color = require('./src/status2color')
+let lengthenLine = require('./src/lengthen-line')
 let Chance = require('chance')
 let chance = new Chance()
 
@@ -86,36 +87,6 @@ graphics.node((node) => {
     linkUI.attr('y2', shortenAtContributor.y2)
   })
 
-function lengthenLine(x1, y1, x2, y2, pixelCount) {
-  if (x1 === x2 && y1 === y2) {
-    return {x1, y1, x2, y2}
-  }
-
-  let dx = x2 - x1
-  let dy = y2 - y1
-  if (dx == 0) { // vertical line
-    if (y2 < y1) {
-      y2 -= pixelCount
-    } else {
-      y2 += pixelCount
-    }
-  } else if (dy == 0) { // horizontal line
-    if (x2 < x1) {
-      x2 -= pixelCount
-    } else {
-      x2 += pixelCount
-    }
-  } else { // non-horizontal, non-vertical line:
-    let length = Math.sqrt(dx * dx + dy * dy)
-    let scale = (length + pixelCount) / length
-    dx *= scale
-    dy *= scale
-    x2 = x1 + dx
-    y2 = y1 + dy
-  }
-  return {x1, y1, x2, y2}
-}
-
 graphics.link((link) => {
   return Viva.Graph.svg('line')
     .attr('stroke', status2color[link.data.status])
@@ -133,7 +104,7 @@ let renderer = Viva.Graph.View.renderer(graph, {graphics, layout})
 renderer.run(50)
 
 let GraphPopulator = require('./src/graph-populator')
-let populator = new GraphPopulator(data, {
+new GraphPopulator(data, {
   beginUpdate: () => {
     graph.beginUpdate()
   },

@@ -198,7 +198,7 @@ sigma.canvas.edges.def = (edge, source, target, context, settings) => {
 // Initiate the graph
 
 let GraphPopulator = require('./src/graph-populator')
-let populator = new GraphPopulator(data, {
+new GraphPopulator(data, {
   addPerson: (person) => {
     s.graph.addNode({
       id: 'person-' + person.id,
