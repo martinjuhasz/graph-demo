@@ -31,6 +31,16 @@ let s = new sigma({
   }
 })
 
+let forceAtlasConfig = {
+  worker: true,
+  barnesHutOptimize: true,
+  slowDown: 100,
+  autoStop: true,
+  scalingRatio: springLength,
+  gravity: 2
+}
+s.startForceAtlas2(forceAtlasConfig)
+
 // Custom rendering
 
 let sinLUT = require('./src/sinLUT')
@@ -172,7 +182,7 @@ sigma.canvas.edges.def = (edge, source, target, context, settings) => {
   var newTY = targetY + sinLUT(3.1414 + angle) * (thisSizeTarget * 1.5)
 
   context.strokeStyle = color
-  context.lineWidth = lineWidth
+  context.lineWidth = 2
   context.beginPath()
   context.moveTo(
     newSX,
@@ -225,13 +235,7 @@ let populator = new GraphPopulator(data, {
     s.killForceAtlas2()
   },
   endUpdate: () => {
-    s.startForceAtlas2({
-      worker: true,
-      barnesHutOptimize: false,
-      slowDown: 10,
-      autoStop: true,
-      scalingRatio: springLength
-    })
+    s.startForceAtlas2(forceAtlasConfig)
   },
-  interval: numPeople > 500 ? 500 : 250
+  interval: 250
 }).populate()
