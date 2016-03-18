@@ -115,7 +115,6 @@ function lengthenLine(x1, y1, x2, y2, pixelCount) {
   return {x1, y1, x2, y2}
 }
 
-
 graphics.link((link) => {
   return Viva.Graph.svg('line')
     .attr('stroke', status2color[link.data.status])
@@ -137,10 +136,10 @@ let pages = _chunk(data.peopleIds, 10)
 var addInterval = setInterval(() => {
   let page = pages.shift()
   if (!page) {
-    clearInterval(addInterval);
+    clearInterval(addInterval)
     return
   }
-  graph.beginUpdate();
+  graph.beginUpdate()
   _map(page, (personId) => {
     let person = addPerson(personId)
     _map(person.commitments, (commitment) => {
@@ -148,8 +147,8 @@ var addInterval = setInterval(() => {
       graph.addLink('person-' + commitment.person, 'contribution-' + commitment.contribution, {status: commitment.status})
     })
   })
-  graph.endUpdate();
-}, 100);
+  graph.endUpdate()
+}, 100)
 
 let renderedContribitions = {}
 function addContribution(contributionId) {
@@ -164,7 +163,6 @@ function addContribution(contributionId) {
   })
 }
 
-let renderedPeople = {}
 function addPerson(personId) {
   let person = data.people[personId]
   graph.addNode('person-' + personId, {type: 'person'})

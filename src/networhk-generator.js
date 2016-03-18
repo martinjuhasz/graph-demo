@@ -16,6 +16,8 @@ function createCommitment(commitmentId, personId) {
 }
 
 module.exports = (numPeople, numContributions) => {
+  numContributions = Math.max(5, numContributions)
+  numPeople = Math.max(2, numPeople)
   let people = {}
   let peopleIds = []
   let contributions = {}
