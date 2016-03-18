@@ -2,20 +2,35 @@
 
 let _map = require('lodash/map')
 let _chunk = require('lodash/chunk')
+let _defaults = require('lodash/defaults')
 
-function GraphPopulator(data, callbacks) {
+let noop = () => {
+}
+
+function GraphPopulator(data, options) {
   this.data = data
-  this.callbacks = callbacks
+  this.callbacks = _defaults(options, {
+    begin: noop,
+    end: noop,
+    beginUpdate: noop,
+    endUpdate: noop,
+    addPerson: noop,
+    addCommitment: noop,
+    addContribution: noop
+  })
+  this.interval = options.interval || 100
 }
 
 GraphPopulator.prototype.populate = function () {
   let self = this
   let renderedContribitions = {}
   let pages = _chunk(self.data.peopleIds, 10)
+  self.callbacks.begin()
   var addInterval = setInterval(() => {
     let page = pages.shift()
     if (!page) {
       clearInterval(addInterval)
+      self.callbacks.end()
       return
     }
     self.callbacks.beginUpdate()
@@ -33,7 +48,7 @@ GraphPopulator.prototype.populate = function () {
       })
     })
     self.callbacks.endUpdate()
-  }, 100)
+  }, self.interval)
 }
 
 module.exports = GraphPopulator
