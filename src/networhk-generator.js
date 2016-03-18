@@ -5,6 +5,7 @@ let _sample = require('lodash/sample')
 let _random = require('lodash/random')
 let _map = require('lodash/map')
 let _filter = require('lodash/filter')
+let _find = require('lodash/find')
 
 function createCommitment(commitmentId, personId) {
   return {
@@ -19,7 +20,6 @@ module.exports = (numPeople, numContributions) => {
   let peopleIds = []
   let contributions = {}
   let contributionIds = []
-  let commitments = []
   let chance = new Chance()
 
   // Create people
@@ -44,38 +44,29 @@ module.exports = (numPeople, numContributions) => {
     }
     contributionIds.push(i)
     // Creator commitment
-    commitments.push(createCommitment(i, personId))
-    // Add random commitments
-    for (let j = 0; j < _random(10); j++) {
-      let contributorId = personId
-      while (contributorId === personId) {
-        contributorId = _sample(peopleIds)
-      }
-      let commitment = createCommitment(i, contributorId)
-      commitments.push(commitment)
-      people[contributorId].commitments.push(commitment)
-    }
+    let commitment = createCommitment(i, personId)
+    people[personId].commitments.push(commitment)
   }
 
-  // Connect people without commitment
-  _map(_filter(people, (person) => {
-    return person.commitments.length === 0
-  }), (person) => {
-    let contributionId = _sample(contributionIds)
-    let commitment = createCommitment(contributionId, person.id)
-    commitments.push(commitment)
-    person.commitments.push(commitment)
+  // Connect people to commitments
+  _map(people, (person) => {
+    for (let j = 0; j < _sample([1, 1, 1, 1, 1, 2, 5]); j++) {
+      let contributionId
+      while (!contributionId || _find(person.commitments, {'contribution': contributionId})) {
+        contributionId = _sample(contributionIds)
+      }
+      let commitment = createCommitment(contributionId, person.id)
+      person.commitments.push(commitment)
+    }
   })
 
   console.log(peopleIds.length, 'People generated')
   console.log(contributionIds.length, 'Contributions generated')
-  console.log(commitments.length, 'Commitments generated')
 
   return {
     people,
     peopleIds,
     contributions,
-    contributionIds,
-    commitments
+    contributionIds
   }
 }

@@ -1,6 +1,7 @@
 'use strict'
 
 let _map = require('lodash/map')
+let _chunk = require('lodash/chunk')
 let avatarSize = 32
 let networhkGenerator = require('./src/networhk-generator')
 let status2color = require('./src/status2color')
@@ -12,20 +13,6 @@ let data = networhkGenerator(numPeople, numContributions)
 let Viva = require('vivagraphjs')
 let graph = Viva.Graph.graph()
 let graphics = Viva.Graph.View.svgGraphics()
-_map(data.peopleIds, (personId) => {
-  graph.addNode('person-' + personId, {type: 'person'})
-})
-_map(data.contributionIds, (contributionId) => {
-  let contribution = data.contributions[contributionId]
-  graph.addNode('contribution-' + contributionId, {
-    type: 'contribution',
-    open: contribution.open,
-    priority: contribution.priority
-  })
-})
-_map(data.commitments, (commitment) => {
-  graph.addLink('person-' + commitment.person, 'contribution-' + commitment.contribution, {status: commitment.status})
-})
 
 let defs = Viva.Graph.svg('defs')
 graphics.getSvgRoot().append(defs)
@@ -143,4 +130,43 @@ let layout = Viva.Graph.Layout.forceDirected(graph, {
 })
 
 var renderer = Viva.Graph.View.renderer(graph, {graphics, layout})
-renderer.run()
+renderer.run(50)
+
+// Add persons in batch of 10
+let pages = _chunk(data.peopleIds, 10)
+var addInterval = setInterval(() => {
+  let page = pages.shift()
+  if (!page) {
+    clearInterval(addInterval);
+    return
+  }
+  graph.beginUpdate();
+  _map(page, (personId) => {
+    let person = addPerson(personId)
+    _map(person.commitments, (commitment) => {
+      addContribution(commitment.contribution)
+      graph.addLink('person-' + commitment.person, 'contribution-' + commitment.contribution, {status: commitment.status})
+    })
+  })
+  graph.endUpdate();
+}, 100);
+
+let renderedContribitions = {}
+function addContribution(contributionId) {
+  if (renderedContribitions[contributionId]) {
+    return
+  }
+  let contribution = data.contributions[contributionId]
+  graph.addNode('contribution-' + contributionId, {
+    type: 'contribution',
+    open: contribution.open,
+    priority: contribution.priority
+  })
+}
+
+let renderedPeople = {}
+function addPerson(personId) {
+  let person = data.people[personId]
+  graph.addNode('person-' + personId, {type: 'person'})
+  return person
+}
