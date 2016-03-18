@@ -1,6 +1,7 @@
 'use strict'
 
 let avatarSize = 32
+let springLength = 50
 let networhkGenerator = require('./src/networhk-generator')
 let status2color = require('./src/status2color')
 let Chance = require('chance')
@@ -122,7 +123,7 @@ graphics.link((link) => {
 })
 
 let layout = Viva.Graph.Layout.forceDirected(graph, {
-  springLength: 50,
+  springLength,
   springCoeff: 0.0001,
   dragCoeff: 0.02,
   gravity: -2.5
