@@ -20,7 +20,7 @@ install:
   - npm install
 
 script:
-  - make
+  - make build
 
 after_success:
   - cd build
