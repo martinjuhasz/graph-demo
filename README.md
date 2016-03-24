@@ -12,6 +12,6 @@ They are automatically build with Travis and pushed to the `gh-pages` branch so 
 ## How to build
 
     npm install
-    make
+    make build
     
 Now you can open your browser at the files in the `build` folder.
