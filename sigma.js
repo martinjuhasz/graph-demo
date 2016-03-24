@@ -206,7 +206,8 @@ new GraphPopulator(data, {
       y: Math.random() * 100,
       size: avatarSize / 2,
       type: 'person',
-      url: chance.avatar({protocol: 'https'}) + '?s=' + avatarSize + '&d=monsterid',
+      // url: chance.avatar({protocol: 'https'}) + '?s=' + avatarSize + '&d=monsterid',
+      url: './avatar.png',
       fixed: 0
     })
   },
