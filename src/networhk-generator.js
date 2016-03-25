@@ -6,11 +6,10 @@ let _random = require('lodash/random')
 let _map = require('lodash/map')
 let _find = require('lodash/find')
 
-function createCommitment(commitmentId, personId) {
+function createCommitment(contributionId, personId) {
   return {
-    contribution: commitmentId,
-    person: personId,
-    status: _sample(['good', 'bad'])
+    contribution: contributionId,
+    person: personId
   }
 }
 
@@ -41,6 +40,7 @@ module.exports = (numPeople, numContributions) => {
       title: chance.sentence({words: _random(1, 6)}),
       open: _sample([true, false]),
       priority: _sample(['gold', 'silver', 'bronze']),
+      status: _sample(['good', 'good', 'good', 'good', 'good', 'bad']),
       creator: personId
     }
     contributionIds.push(i)
