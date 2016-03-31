@@ -80,11 +80,10 @@ graphics
     let from = fromPos
     let to = toPos
     let shortenAtContribution = lengthenLine(from.x, from.y, to.x, to.y, -(avatarSize / 2))
-    let shortenAtContributor = lengthenLine(shortenAtContribution.x2, shortenAtContribution.y2, shortenAtContribution.x1, shortenAtContribution.y1, -(avatarSize / 2) - 4)
-    linkUI.attr('x1', shortenAtContributor.x1)
-    linkUI.attr('y1', shortenAtContributor.y1)
-    linkUI.attr('x2', shortenAtContributor.x2)
-    linkUI.attr('y2', shortenAtContributor.y2)
+    linkUI.attr('x1', shortenAtContribution.x1)
+    linkUI.attr('y1', shortenAtContribution.y1)
+    linkUI.attr('x2', shortenAtContribution.x2)
+    linkUI.attr('y2', shortenAtContribution.y2)
   })
 
 graphics.link((link) => {
