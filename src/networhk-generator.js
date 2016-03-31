@@ -6,7 +6,7 @@ let _random = require('lodash/random')
 let _map = require('lodash/map')
 let _find = require('lodash/find')
 
-function createCommitment(contributionId, personId) {
+function createCommitment (contributionId, personId) {
   return {
     contribution: contributionId,
     person: personId
@@ -24,11 +24,13 @@ module.exports = (numPeople, numContributions) => {
 
   // Create people
   for (let i = 0; i < numPeople; i++) {
-    people[i] = {
+    let person = {
       id: i,
       name: chance.name(),
       commitments: []
     }
+    person.email = person.name.replace(' ', '.') + '@example.com'
+    people[i] = person
     peopleIds.push(i)
   }
 

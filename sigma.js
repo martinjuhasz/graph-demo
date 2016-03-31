@@ -1,11 +1,12 @@
 'use strict'
 
+/* global sigma, Image */
+/* eslint new-cap: [2, {"newIsCapExceptions": ["sigma"]}] */
+
 let avatarSize = 32
 let springLength = 50
 let networhkGenerator = require('./src/networhk-generator')
 let status2color = require('./src/status2color')
-let Chance = require('chance')
-let chance = new Chance()
 
 let numPeople = parseInt(window.location.hash.substr(1)) || 250
 let numContributions = Math.ceil(numPeople / 4)
@@ -49,9 +50,9 @@ let cosLUT = require('./src/cosLUT')
 sigma.utils.pkg('sigma.canvas.nodes')
 // draw person node
 sigma.canvas.nodes.person = (() => {
-  var _cache = {},
-    _loading = {},
-    _callbacks = {}
+  let _cache = {}
+  let _loading = {}
+  let _callbacks = {}
   // Return the renderer itself:
   let renderer = function (node, context, settings) {
     let prefix = settings('prefix') || ''
@@ -130,7 +131,6 @@ sigma.canvas.nodes.contribution = (() => {
   return (node, context, settings) => {
     let prefix = settings('prefix') || ''
     let size = avatarSize / 4
-    let url = node.url
 
     // Draw the border:
     context.beginPath()
@@ -155,13 +155,11 @@ sigma.canvas.nodes.contribution = (() => {
   }
 })()
 
-
 // draw edge
 sigma.utils.pkg('sigma.canvas.edges')
 sigma.canvas.edges.def = (edge, source, target, context, settings) => {
   let color = edge.color
   let prefix = settings('prefix') || ''
-  let lineWidth = edge[prefix + 'size'] || 1
 
   // angle between source and target
   var sourceX = source[prefix + 'x']

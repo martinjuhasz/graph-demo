@@ -2,7 +2,7 @@
 
 // http://jacksondunstan.com/articles/1190
 // http://james.padolsey.com/javascript/double-bitwise-not/
-//let radians = 1.2
+// let radians = 1.2
 let numDigits = 2
 let pow = Math.pow(10, numDigits)
 let round = 1.0 / pow
@@ -15,6 +15,6 @@ for (let i = 0; i < len; ++i) {
   theta += round
 }
 
-module.exports = function sinLUT(radians) {
+module.exports = function sinLUT (radians) {
   return sinLUTTable[(((6.2828 * (~~(radians < 0))) + (radians % 6.2828)) * pow) >> 0]
 }

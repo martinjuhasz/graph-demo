@@ -7,7 +7,7 @@ let _defaults = require('lodash/defaults')
 let noop = () => {
 }
 
-function GraphPopulator(data, options) {
+function GraphPopulator (data, options) {
   this.data = data
   this.callbacks = _defaults(options, {
     begin: noop,

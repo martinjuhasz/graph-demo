@@ -5,8 +5,6 @@ let springLength = 50
 let networhkGenerator = require('./src/networhk-generator')
 let status2color = require('./src/status2color')
 let lengthenLine = require('./src/lengthen-line')
-let Chance = require('chance')
-let chance = new Chance()
 
 let numPeople = parseInt(window.location.hash.substr(1)) || 250
 let numContributions = Math.ceil(numPeople / 4)
@@ -19,7 +17,8 @@ let graphics = Viva.Graph.View.svgGraphics()
 let defs = Viva.Graph.svg('defs')
 graphics.getSvgRoot().append(defs)
 
-graphics.node((node) => {
+graphics
+  .node((node) => {
     if (node.data.type === 'contribution') {
       let contribution = Viva.Graph.svg('circle')
         .attr('r', avatarSize / 4)
