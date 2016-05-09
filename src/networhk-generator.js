@@ -9,6 +9,7 @@ let _find = require('lodash/find')
 function createCommitment (contributionId, personId) {
   return {
     contribution: contributionId,
+    status: Math.random() > 0.1 ? 'good' : 'bad',
     person: personId
   }
 }
@@ -42,12 +43,12 @@ module.exports = (numPeople, numContributions) => {
       title: chance.sentence({words: _random(1, 6)}),
       open: _sample([true, false]),
       priority: _sample(['gold', 'silver', 'bronze']),
-      status: _sample(['good', 'good', 'good', 'good', 'good', 'bad']),
       creator: personId
     }
     contributionIds.push(i)
     // Creator commitment
     let commitment = createCommitment(i, personId)
+    commitment.owner = true
     people[personId].commitments.push(commitment)
   }
 

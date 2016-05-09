@@ -113,11 +113,11 @@ new GraphPopulator(data, {
   addPerson: (person) => {
     graph.addNode('person-' + person.id, {type: 'person'})
   },
-  addCommitment: (commitment, contribution) => {
+  addCommitment: (commitment) => {
     graph.addLink(
       'person-' + commitment.person,
       'contribution-' + commitment.contribution,
-      {status: contribution.status})
+      {status: commitment.status})
   },
   addContribution: (contribution) => {
     graph.addNode('contribution-' + contribution.id, {

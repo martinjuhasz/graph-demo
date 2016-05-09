@@ -43,8 +43,7 @@ GraphPopulator.prototype.populate = function () {
           self.callbacks.addContribution(contribution)
           renderedContribitions[commitment.contribution] = true
         }
-        let contribution = self.data.contributions[commitment.contribution]
-        self.callbacks.addCommitment(commitment, contribution)
+        self.callbacks.addCommitment(commitment)
       })
     })
     self.callbacks.endUpdate()

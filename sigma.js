@@ -209,13 +209,13 @@ new GraphPopulator(data, {
       fixed: 0
     })
   },
-  addCommitment: (commitment, contribution) => {
+  addCommitment: (commitment) => {
     s.graph.addEdge({
       id: 'commitment-' + commitment.contribution + '-' + commitment.person,
       source: 'person-' + commitment.person,
       target: 'contribution-' + commitment.contribution,
       size: '4',
-      color: status2color[contribution.status]
+      color: status2color[commitment.status]
     })
   },
   addContribution: (contribution) => {
