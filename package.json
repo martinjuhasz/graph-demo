@@ -31,10 +31,10 @@
   "dependencies": {
     "browserify": "^13.0.0",
     "chance": "^1.0.1",
+    "commander": "^2.9.0",
     "lodash": "^4.6.1",
     "sigma": "^1.1.0",
-    "vivagraphjs": "^0.8.1",
-    "yargs": "^4.3.2"
+    "vivagraphjs": "^0.8.1"
   },
   "config": {
     "ghooks": {
