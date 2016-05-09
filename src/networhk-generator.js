@@ -63,9 +63,6 @@ module.exports = (numPeople, numContributions) => {
     }
   })
 
-  console.log(peopleIds.length, 'People generated')
-  console.log(contributionIds.length, 'Contributions generated')
-
   return {
     people,
     peopleIds,
