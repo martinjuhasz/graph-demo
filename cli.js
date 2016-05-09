@@ -30,7 +30,7 @@ program
                 contributionCommitments[commitment.contribution] = []
               }
               contributionCommitments[commitment.contribution].push({
-                email: user.email.toLowerCase(),
+                user: user.email.toLowerCase(),
                 status: commitment.status,
                 owner: commitment.owner
               })
